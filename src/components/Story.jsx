@@ -2,7 +2,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useRef, useEffect } from "react";
 import { useGSAP } from "@gsap/react";
-import { FaShieldAlt, FaLock } from "react-icons/fa";
+import { FaShieldAlt, FaLock, FaNetworkWired, FaBug, FaRobot } from "react-icons/fa";
 
 import Button from "./Button";
 import AnimatedTitle from "./AnimatedTitle";
@@ -264,14 +264,88 @@ const SecurityBadge = ({ icon, delay = 0, className = "" }) => {
   );
 };
 
-const FloatingImage = () => {
+// Story point component
+const StoryPoint = ({ number, title, description, delay = 0 }) => {
+  const pointRef = useRef(null);
+  const lineRef = useRef(null);
+  const contentRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.set(pointRef.current, {
+      scale: 0,
+      opacity: 0
+    });
+
+    gsap.set(lineRef.current, {
+      height: 0
+    });
+
+    gsap.set(contentRef.current, {
+      opacity: 0,
+      x: -20
+    });
+
+    gsap.to(pointRef.current, {
+      scale: 1,
+      opacity: 1,
+      duration: 0.5,
+      delay: delay,
+      ease: "back.out(1.7)"
+    });
+
+    gsap.to(lineRef.current, {
+      height: "100%",
+      duration: 0.8,
+      delay: delay + 0.3,
+      ease: "power1.inOut"
+    });
+
+    gsap.to(contentRef.current, {
+      opacity: 1,
+      x: 0,
+      duration: 0.5,
+      delay: delay + 0.6,
+      ease: "power2.out"
+    });
+
+  }, { scope: pointRef });
+
+  return (
+    <div className="flex mb-8 relative">
+      <div className="flex flex-col items-center mr-6">
+        <div
+          ref={pointRef}
+          className="flex items-center justify-center h-12 w-12 rounded-full bg-[#050505] text-blue-500 border-2 border-blue-500 z-10"
+        >
+          <span className="font-bold text-lg">{number}</span>
+        </div>
+        {number < 3 && (
+          <div
+            ref={lineRef}
+            className="w-[2px] bg-blue-500/30 absolute top-12 left-6 -translate-x-1/2 h-0"
+          ></div>
+        )}
+      </div>
+      <div ref={contentRef} className="pt-2">
+        <h3 className="text-xl font-bold text-blue-50 uppercase tracking-wider mb-2 flex items-center">
+          <span className="text-blue-500 mr-2">/</span>
+          {title}
+        </h3>
+        <p className="text-gray-400 max-w-xl">
+          {description}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+const TECHANVStory = () => {
   const sectionRef = useRef(null);
-  const frameRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
-  const descriptionRef = useRef(null);
   const imageContainerRef = useRef(null);
   const imageFrameRef = useRef(null);
+  const frameRef = useRef(null);
 
   // Setup animations with GSAP
   useGSAP(() => {
@@ -294,18 +368,6 @@ const FloatingImage = () => {
       delay: 0.2,
       scrollTrigger: {
         trigger: titleRef.current,
-        start: "top 80%",
-        toggleActions: "play none none none"
-      }
-    });
-
-    gsap.from(descriptionRef.current, {
-      opacity: 0,
-      y: 30,
-      duration: 0.8,
-      delay: 0.4,
-      scrollTrigger: {
-        trigger: descriptionRef.current,
         start: "top 80%",
         toggleActions: "play none none none"
       }
@@ -448,7 +510,7 @@ const FloatingImage = () => {
   `;
 
   return (
-    <div id="story" ref={sectionRef} className="min-h-dvh w-screen bg-[#030303] text-blue-50 relative overflow-hidden">
+    <div id="techanv-story" ref={sectionRef} className="min-h-dvh w-screen bg-[#030303] text-blue-50 relative overflow-hidden py-20">
       {/* Background grid */}
       <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px] opacity-5"></div>
 
@@ -460,26 +522,28 @@ const FloatingImage = () => {
       <Scanlines />
       <style jsx>{scanlinesStyle}</style>
 
-      <div className="flex size-full flex-col items-center py-10 pb-24 relative z-10">
-        <div className="w-10 h-[2px] bg-blue-500 mb-4"></div>
-        <p
-          ref={subtitleRef}
-          className="font-general text-sm uppercase tracking-wider md:text-[10px] mb-2 text-blue-500 inline-block py-1 px-2 border-l-2 border-blue-500"
-        >
-          <GlitchText text="COMPREHENSIVE CYBERSECURITY SOLUTIONS" />
-        </p>
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="text-center mb-16">
+          <div className="w-10 h-[2px] bg-blue-500 mb-4 mx-auto"></div>
+          <p
+            ref={subtitleRef}
+            className="font-general text-sm uppercase tracking-wider md:text-[10px] mb-2 text-blue-500 inline-block py-1 px-2 border-l-2 border-blue-500"
+          >
+            <GlitchText text="OUR JOURNEY TO SECURE THE DIGITAL FRONTIER" />
+          </p>
 
-        <div className="relative size-full">
-          <div ref={titleRef}>
+          <div ref={titleRef} className="mt-5">
             <AnimatedTitle
-              title="your <b>s</b>ecurity <br /> our priorit<b>y</b>"
-              containerClass="mt-5 relative z-10 text-white uppercase"
+              title="The <b>TECHANV</b> Story"
+              containerClass="relative z-10 !text-white text-center uppercase tracking-wide"
             />
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-16">
           <div
             ref={imageContainerRef}
-            className="story-img-container relative mt-10 max-w-4xl mx-auto"
+            className="story-img-container relative mx-auto md:mx-0"
           >
             {/* Valorant-style borders */}
             <div className="border-line absolute top-0 left-0 h-[2px] bg-blue-500 w-0"></div>
@@ -495,7 +559,9 @@ const FloatingImage = () => {
 
             {/* Security badges */}
             <SecurityBadge icon={<FaShieldAlt size={18} />} delay={1.6} className="security-badge top-5 left-5" />
-            <SecurityBadge icon={<FaLock size={18} />} delay={1.8} className="security-badge bottom-5 right-5" />
+            <SecurityBadge icon={<FaNetworkWired size={18} />} delay={1.8} className="security-badge top-5 right-5" />
+            <SecurityBadge icon={<FaBug size={18} />} delay={2.0} className="security-badge bottom-5 left-5" />
+            <SecurityBadge icon={<FaRobot size={18} />} delay={2.2} className="security-badge bottom-5 right-5" />
 
             <div ref={imageFrameRef} className="story-img-mask relative overflow-hidden p-4 bg-[#050505]/80">
               <div className="story-img-content">
@@ -504,8 +570,8 @@ const FloatingImage = () => {
                   onMouseMove={handleMouseMove}
                   onMouseLeave={handleMouseLeave}
                   onMouseEnter={handleMouseLeave}
-                  src="/img/entrance.webp"
-                  alt="security operations center"
+                  src="/img/gallery-1.webp"
+                  alt="TECHANV Security Operations Center"
                   className="object-contain relative z-10"
                 />
 
@@ -514,23 +580,64 @@ const FloatingImage = () => {
               </div>
             </div>
           </div>
+
+          <div className="story-timeline relative">
+            <StoryPoint
+              number={1}
+              title="The Beginning"
+              description="Founded in 2020 by a team of security veterans, TECHANV emerged to address the growing gap in cybersecurity solutions. Recognizing that traditional approaches weren't keeping pace with evolving threats, our founders set out to create an integrated platform that combined offensive and defensive security capabilities."
+              delay={0.2}
+            />
+
+            <StoryPoint
+              number={2}
+              title="Innovation"
+              description="In 2022, we launched our groundbreaking XDR/OXDR platform, pioneering a unified approach that merges defensive detection capabilities with offensive security testing. This dual-minded architecture allows organizations to not only detect and respond to threats but also proactively identify vulnerabilities across their infrastructure."
+              delay={0.7}
+            />
+
+            <StoryPoint
+              number={3}
+              title="Today"
+              description="Today, TECHANV stands at the forefront of cybersecurity innovation, protecting enterprises worldwide with our comprehensive security solutions. Our platform integrates advanced AI-driven analytics, automated response capabilities, and continuous security validation to ensure organizations stay ahead of emerging threats."
+              delay={1.2}
+            />
+          </div>
         </div>
 
-        <div className="-mt-80 flex w-full justify-center md:-mt-64 md:me-44 md:justify-end">
-          <div className="flex h-full w-fit flex-col items-center md:items-start relative z-10 bg-[#050505]/70 p-6 rounded-sm border-l-2 border-blue-500">
-            <p
-              ref={descriptionRef}
-              className="mt-3 max-w-sm text-center font-circular-web text-gray-300 md:text-start"
-            >
-              <span className="text-blue-500 mr-2">//</span>
-              Visit security.techanv.com to explore our complete suite of cybersecurity
-              solutions including SIEM, XDR, EDR, and SOAR. Protect your organization
-              with TECHANV's advanced threat protection.
-            </p>
+        <div className="bg-[#050505] p-6 rounded-none md:rounded-lg relative overflow-hidden border border-blue-500/20 max-w-3xl mx-auto">
+          {/* Decorative lines */}
+          <div className="absolute top-0 left-0 w-[150px] h-[1px] bg-blue-500/50"></div>
+          <div className="absolute top-0 left-0 w-[1px] h-[150px] bg-blue-500/50"></div>
+          <div className="absolute bottom-0 right-0 w-[150px] h-[1px] bg-blue-500/50"></div>
+          <div className="absolute bottom-0 right-0 w-[1px] h-[150px] bg-blue-500/50"></div>
 
-            <div className="mt-5">
-              <ValorantButton text="EXPLORE SOLUTIONS" />
-            </div>
+          {/* Security-themed background pattern */}
+          <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0" style={{
+              backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.2'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")",
+              backgroundSize: "24px 24px"
+            }}/>
+          </div>
+
+          <div className="mb-2 flex items-center justify-center">
+            <div className="w-10 h-[2px] bg-blue-500 mr-4"></div>
+            <GlitchText text="OUR MISSION" className="text-sm font-bold tracking-wider text-blue-500" />
+          </div>
+
+          <h3 className="text-xl font-bold mb-3 relative uppercase tracking-wider text-center">
+            Securing the Digital Future
+          </h3>
+
+          <p className="relative text-gray-300 text-center mb-6">
+            "At TECHANV, we believe security is not just about defense—it's about understanding
+            the attacker's mindset while building a defender's brain. Our integrated XDR/OXDR platform
+            embodies this philosophy, delivering proactive threat detection and response capabilities
+            that evolve alongside the threat landscape."
+          </p>
+
+          <div className="flex justify-center">
+            <ValorantButton text="EXPLORE OUR PLATFORM" />
           </div>
         </div>
       </div>
@@ -538,4 +645,4 @@ const FloatingImage = () => {
   );
 };
 
-export default FloatingImage;
+export default TECHANVStory;
