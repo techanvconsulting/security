@@ -41,7 +41,7 @@ const SecurityParticle = ({ delay }) => {
   return (
     <div
       ref={particleRef}
-      className="absolute text-blue-900/5 pointer-events-none"
+      className="absolute text-blue-500/10 pointer-events-none"
     >
       {Math.random() > 0.5 ? "0" : "1"}
     </div>
@@ -58,12 +58,112 @@ const SecurityParticles = () => {
   );
 };
 
-// Enhanced AcronymItem with GSAP animations
+// Angular decorative element component
+const AngularDecoration = ({ className = "", delay = 0 }) => {
+  const decorRef = useRef(null);
+
+  useGSAP(() => {
+    gsap.set(decorRef.current, {
+      opacity: 0,
+      scale: 0.8,
+    });
+
+    gsap.to(decorRef.current, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.7,
+      delay: delay,
+      ease: "power3.out"
+    });
+
+    // Subtle rotation animation
+    gsap.to(decorRef.current, {
+      rotation: "+=360",
+      duration: 60,
+      repeat: -1,
+      ease: "none"
+    });
+  }, { scope: decorRef });
+
+  return (
+    <div
+      ref={decorRef}
+      className={`absolute pointer-events-none ${className}`}
+    >
+      <div className="relative">
+        <div className="absolute border border-blue-500/50 w-32 h-32 rotate-45"></div>
+        <div className="absolute border border-blue-500/30 w-32 h-32 rotate-[30deg]"></div>
+        <div className="absolute bg-blue-500/10 w-16 h-16 rotate-45 left-8 top-8"></div>
+      </div>
+    </div>
+  );
+};
+
+// Glitch text effect
+const GlitchText = ({ text, className = "" }) => {
+  const textRef = useRef(null);
+
+  useGSAP(() => {
+    // Random glitch effect
+    const createGlitch = () => {
+      const duration = 0.05;
+      const timeline = gsap.timeline({
+        repeat: 1,
+        yoyo: true,
+        onComplete: () => {
+          // Schedule next glitch
+          gsap.delayedCall(Math.random() * 5 + 3, createGlitch);
+        }
+      });
+
+      timeline
+        .to(textRef.current, {
+          skewX: Math.random() * 10 - 5,
+          duration: duration,
+          ease: "power1.inOut"
+        })
+        .to(textRef.current, {
+          opacity: 0.8,
+          duration: duration/2,
+          ease: "power1.inOut"
+        }, "<")
+        .to(textRef.current, {
+          x: Math.random() * 4 - 2,
+          duration: duration,
+          ease: "power1.inOut"
+        }, "<");
+    };
+
+    // Start the glitch effect
+    gsap.delayedCall(Math.random() * 2 + 1, createGlitch);
+
+  }, { scope: textRef });
+
+  return (
+    <span ref={textRef} className={`inline-block ${className}`}>
+      {text}
+    </span>
+  );
+};
+
+// Scanlines effect
+const Scanlines = () => {
+  return (
+    <div className="scanlines pointer-events-none absolute inset-0 z-20 overflow-hidden opacity-10">
+      <div className="scanline"></div>
+      <div className="scanline"></div>
+      <div className="scanline"></div>
+    </div>
+  );
+};
+
+// Enhanced AcronymItem with GSAP animations and Valorant styling
 const AcronymItem = ({ letter, word, description, icon, index }) => {
   const itemRef = useRef(null);
   const iconRef = useRef(null);
   const letterRef = useRef(null);
   const contentRef = useRef(null);
+  const hoverRef = useRef(null);
   const borderRefs = {
     top: useRef(null),
     right: useRef(null),
@@ -78,44 +178,108 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
     threshold: 0.2
   });
 
+  // Setup initial state
+  useEffect(() => {
+    gsap.set(itemRef.current, {
+      opacity: 0,
+      y: 30
+    });
+
+    // Setup borders initial state
+    gsap.set(borderRefs.top.current, { width: 0 });
+    gsap.set(borderRefs.right.current, { height: 0 });
+    gsap.set(borderRefs.bottom.current, { width: 0 });
+    gsap.set(borderRefs.left.current, { height: 0 });
+
+    gsap.set(iconRef.current, { scale: 0 });
+    gsap.set(letterRef.current, { opacity: 0, y: 10 });
+    gsap.set(contentRef.current, { opacity: 0, y: 10 });
+  }, []);
+
   // Handle reveal animation on scroll
   useEffect(() => {
     if (intersection && intersection.isIntersecting) {
+      // Reveal card
       gsap.to(itemRef.current, {
         opacity: 1,
         y: 0,
-        duration: 0.5,
+        duration: 0.7,
         delay: index * 0.1,
+        ease: "power2.out"
+      });
+
+      // Reveal borders with staggered effect
+      gsap.to(borderRefs.top.current, {
+        width: "100%",
+        duration: 0.4,
+        delay: index * 0.1 + 0.1,
+        ease: "power2.inOut"
+      });
+
+      gsap.to(borderRefs.right.current, {
+        height: "100%",
+        duration: 0.4,
+        delay: index * 0.1 + 0.2,
+        ease: "power2.inOut"
+      });
+
+      gsap.to(borderRefs.bottom.current, {
+        width: "100%",
+        duration: 0.4,
+        delay: index * 0.1 + 0.3,
+        ease: "power2.inOut"
+      });
+
+      gsap.to(borderRefs.left.current, {
+        height: "100%",
+        duration: 0.4,
+        delay: index * 0.1 + 0.4,
+        ease: "power2.inOut"
+      });
+
+      // Reveal content
+      gsap.to(iconRef.current, {
+        scale: 1,
+        duration: 0.6,
+        delay: index * 0.1 + 0.4,
+        ease: "back.out(1.7)"
+      });
+
+      gsap.to(letterRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        delay: index * 0.1 + 0.5,
+        ease: "power2.out"
+      });
+
+      gsap.to(contentRef.current, {
+        opacity: 1,
+        y: 0,
+        duration: 0.6,
+        delay: index * 0.1 + 0.6,
         ease: "power2.out"
       });
     }
   }, [intersection, index]);
 
-  // Setup initial state
-  useEffect(() => {
-    gsap.set(itemRef.current, {
-      opacity: 0,
-      y: 50
-    });
-
-    // Setup borders
-    gsap.set(borderRefs.top.current, { x: "-100%" });
-    gsap.set(borderRefs.right.current, { y: "-100%" });
-    gsap.set(borderRefs.bottom.current, { x: "100%" });
-    gsap.set(borderRefs.left.current, { y: "100%" });
-  }, []);
-
   // Handle hover animations
   const handleMouseEnter = () => {
+    // Glow effect
+    gsap.to(hoverRef.current, {
+      opacity: 0.8,
+      duration: 0.3
+    });
+
     // Icon animation
     gsap.to(iconRef.current, {
-      scale: 1.05,
+      scale: 1.1,
       duration: 0.3
     });
 
     // Letter animation
     gsap.to(letterRef.current, {
-      color: "#1E40AF",
+      color: "#1d4ed8",
       textShadow: "0 0 8px rgba(59, 130, 246, 0.5)",
       scale: 1.1,
       duration: 0.3
@@ -126,53 +290,22 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
       x: 5,
       duration: 0.3
     });
-
-    // Border animations
-    gsap.to(borderRefs.top.current, {
-      x: "0%",
-      duration: 0.8,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.right.current, {
-      y: "0%",
-      duration: 0.8,
-      delay: 0.1,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.bottom.current, {
-      x: "0%",
-      duration: 0.8,
-      delay: 0.2,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.left.current, {
-      y: "0%",
-      duration: 0.8,
-      delay: 0.3,
-      ease: "power2.inOut"
-    });
-
-    // Background pulse for icon
-    gsap.to(iconRef.current.querySelector('.icon-pulse'), {
-      x: "100%",
-      duration: 1,
-      repeat: -1,
-      repeatDelay: 0.5
-    });
   };
 
   const handleMouseLeave = () => {
     // Reset animations
+    gsap.to(hoverRef.current, {
+      opacity: 0,
+      duration: 0.3
+    });
+
     gsap.to(iconRef.current, {
       scale: 1,
       duration: 0.3
     });
 
     gsap.to(letterRef.current, {
-      color: "#1E40AF",
+      color: "#f0f9ff",
       textShadow: "none",
       scale: 1,
       duration: 0.3
@@ -182,75 +315,36 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
       x: 0,
       duration: 0.3
     });
-
-    // Reset border animations
-    gsap.to(borderRefs.top.current, {
-      x: "-100%",
-      duration: 0.4,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.right.current, {
-      y: "-100%",
-      duration: 0.4,
-      delay: 0.1,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.bottom.current, {
-      x: "100%",
-      duration: 0.4,
-      delay: 0.2,
-      ease: "power2.inOut"
-    });
-
-    gsap.to(borderRefs.left.current, {
-      y: "100%",
-      duration: 0.4,
-      delay: 0.3,
-      ease: "power2.inOut"
-    });
-
-    // Stop icon pulse
-    gsap.killTweensOf(iconRef.current.querySelector('.icon-pulse'));
-    gsap.set(iconRef.current.querySelector('.icon-pulse'), { x: "-100%" });
   };
 
   return (
     <div
       ref={itemRef}
-      className="relative flex items-start gap-4 p-6 rounded-lg bg-white backdrop-blur-sm hover:shadow-lg hover:bg-blue-50/70 transition-shadow duration-300"
+      className="relative flex items-start gap-4 p-6 rounded-lg bg-[#050505] text-white overflow-hidden"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Animated border */}
-      <div className="absolute inset-0 pointer-events-none rounded-lg overflow-hidden">
-        <div
-          ref={borderRefs.top}
-          className="absolute inset-0 bg-gradient-to-r from-blue-500 via-blue-600 to-blue-400"
-          style={{ height: "2px", top: 0 }}
-        />
-        <div
-          ref={borderRefs.right}
-          className="absolute inset-0 bg-gradient-to-b from-blue-500 via-blue-600 to-blue-400"
-          style={{ width: "2px", right: 0 }}
-        />
-        <div
-          ref={borderRefs.bottom}
-          className="absolute inset-0 bg-gradient-to-l from-blue-500 via-blue-600 to-blue-400"
-          style={{ height: "2px", bottom: 0 }}
-        />
-        <div
-          ref={borderRefs.left}
-          className="absolute inset-0 bg-gradient-to-t from-blue-500 via-blue-600 to-blue-400"
-          style={{ width: "2px", left: 0 }}
-        />
+      {/* Valorant-style border animation */}
+      <div ref={borderRefs.top} className="absolute top-0 left-0 h-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.right} className="absolute top-0 right-0 w-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.bottom} className="absolute bottom-0 right-0 h-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.left} className="absolute bottom-0 left-0 w-[2px] bg-blue-500"></div>
+
+      {/* Hover effect overlay */}
+      <div
+        ref={hoverRef}
+        className="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-blue-500/5 opacity-0 pointer-events-none"
+      ></div>
+
+      {/* Background pattern */}
+      <div className="absolute inset-0 opacity-5 pointer-events-none">
+        <div className="absolute left-0 top-0 w-full h-full bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:20px_20px]"></div>
       </div>
 
       <div className="flex flex-col items-center z-10">
         <div
           ref={iconRef}
-          className="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-3 rounded-full mb-2 relative overflow-hidden"
+          className="bg-gradient-to-br from-blue-500 to-blue-700 text-white p-3 rounded-sm mb-2 relative overflow-hidden border border-blue-500/30"
         >
           {/* Icon background pulse effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-30 icon-pulse" style={{ transform: "translateX(-100%)" }}></div>
@@ -258,7 +352,7 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
         </div>
         <div
           ref={letterRef}
-          className="text-4xl font-bold text-blue-800 relative"
+          className="text-4xl font-bold text-blue-50 relative"
         >
           {letter}
         </div>
@@ -268,10 +362,11 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
         ref={contentRef}
         className="z-10"
       >
-        <h3 className="text-xl font-bold mb-1 text-blue-900 inline-block">
+        <h3 className="text-xl font-bold mb-1 text-blue-50 uppercase tracking-wider flex items-center">
+          <span className="text-blue-500 mr-2">/</span>
           {word}
         </h3>
-        <p className="text-gray-600">
+        <p className="text-gray-400">
           {description}
         </p>
       </div>
@@ -279,73 +374,117 @@ const AcronymItem = ({ letter, word, description, icon, index }) => {
   );
 };
 
-// Enhanced CTA button component
-const AnimatedCTA = () => {
-  const ctaRef = useRef(null);
-  const arrowRef = useRef(null);
-  const beamRef = useRef(null);
-
-  useGSAP(() => {
-    // Initial setup
-    gsap.set(beamRef.current, { x: "-100%", opacity: 0 });
-  }, { scope: ctaRef });
+// Valorant-style button
+const ValorantButton = ({ text, className = "" }) => {
+  const buttonRef = useRef(null);
+  const textRef = useRef(null);
+  const bgRef = useRef(null);
+  const borderRefs = {
+    top: useRef(null),
+    right: useRef(null),
+    bottom: useRef(null),
+    left: useRef(null)
+  };
 
   const handleMouseEnter = () => {
-    gsap.to(ctaRef.current, {
-      scale: 1.03,
-      boxShadow: "0 5px 15px rgba(30, 64, 175, 0.25)",
-      duration: 0.3
-    });
-
-    gsap.to(arrowRef.current, {
-      x: 5,
-      duration: 0.3
-    });
-
-    gsap.to(beamRef.current, {
+    gsap.to(bgRef.current, {
       opacity: 1,
-      x: "100%",
-      duration: 0.8,
-      repeat: -1
+      duration: 0.3
+    });
+
+    gsap.to(textRef.current, {
+      color: "#ffffff",
+      letterSpacing: "1px",
+      duration: 0.3
+    });
+
+    // Animate borders
+    gsap.to(borderRefs.top.current, {
+      width: "100%",
+      left: 0,
+      duration: 0.2
+    });
+
+    gsap.to(borderRefs.right.current, {
+      height: "100%",
+      top: 0,
+      duration: 0.2,
+      delay: 0.1
+    });
+
+    gsap.to(borderRefs.bottom.current, {
+      width: "100%",
+      right: 0,
+      duration: 0.2,
+      delay: 0.2
+    });
+
+    gsap.to(borderRefs.left.current, {
+      height: "100%",
+      bottom: 0,
+      duration: 0.2,
+      delay: 0.3
     });
   };
 
   const handleMouseLeave = () => {
-    gsap.to(ctaRef.current, {
-      scale: 1,
-      boxShadow: "none",
-      duration: 0.3
-    });
-
-    gsap.to(arrowRef.current, {
-      x: 0,
-      duration: 0.3
-    });
-
-    gsap.killTweensOf(beamRef.current);
-    gsap.to(beamRef.current, {
+    gsap.to(bgRef.current, {
       opacity: 0,
-      x: "-100%",
       duration: 0.3
+    });
+
+    gsap.to(textRef.current, {
+      color: "#1d4ed8",
+      letterSpacing: "0px",
+      duration: 0.3
+    });
+
+    // Reset borders
+    gsap.to([
+      borderRefs.top.current,
+      borderRefs.right.current,
+      borderRefs.bottom.current,
+      borderRefs.left.current
+    ], {
+      width: 0,
+      height: 0,
+      duration: 0.2
     });
   };
 
+  useEffect(() => {
+    // Initialize borders
+    gsap.set(borderRefs.top.current, { width: 0, left: "50%" });
+    gsap.set(borderRefs.right.current, { height: 0, top: "50%" });
+    gsap.set(borderRefs.bottom.current, { width: 0, right: "50%" });
+    gsap.set(borderRefs.left.current, { height: 0, bottom: "50%" });
+  }, []);
+
   return (
     <div
-      ref={ctaRef}
-      className="relative mt-4 inline-block bg-white text-blue-900 rounded-lg px-6 py-3 font-semibold overflow-hidden"
+      ref={buttonRef}
+      className={`relative inline-block cursor-pointer py-3 px-6 overflow-hidden ${className}`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Background glow effect */}
+      {/* Animated background */}
       <div
-        ref={beamRef}
-        className="absolute inset-0 bg-gradient-to-r from-blue-50 via-blue-100 to-blue-50"
-      />
+        ref={bgRef}
+        className="absolute inset-0 bg-blue-500 opacity-0 transition-opacity duration-300"
+      ></div>
 
-      <div className="flex items-center gap-2 relative z-10">
-        <span>Discover Our Solutions</span>
-        <span ref={arrowRef}>→</span>
+      {/* Animated borders */}
+      <div ref={borderRefs.top} className="absolute top-0 h-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.right} className="absolute right-0 w-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.bottom} className="absolute bottom-0 h-[2px] bg-blue-500"></div>
+      <div ref={borderRefs.left} className="absolute left-0 w-[2px] bg-blue-500"></div>
+
+      {/* Text */}
+      <div
+        ref={textRef}
+        className="relative z-10 uppercase font-bold tracking-wide text-blue-500"
+      >
+        {text}
       </div>
     </div>
   );
@@ -478,34 +617,74 @@ const TechANVDetails = () => {
     }
   ];
 
+  // Custom CSS for scanlines
+  const scanlinesStyle = `
+    @keyframes scanline {
+      0% {
+        transform: translateY(-100%);
+      }
+      100% {
+        transform: translateY(1000%);
+      }
+    }
+
+    .scanlines .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: rgba(37, 99, 235, 0.1);
+      animation: scanline 10s linear infinite;
+    }
+
+    .scanlines .scanline:nth-child(2) {
+      animation-delay: 3.33s;
+    }
+
+    .scanlines .scanline:nth-child(3) {
+      animation-delay: 6.66s;
+    }
+  `;
+
   return (
-    <section id="techanv-meaning" ref={sectionRef} className="py-20 bg-white relative overflow-hidden">
+    <section id="techanv-meaning" ref={sectionRef} className="py-20 bg-[#030303] text-white relative overflow-hidden">
       {/* Background security animation */}
       <SecurityParticles />
 
-      {/* Cyber security grid background */}
-      <div className="absolute inset-0 bg-grid-blue-100/20 bg-[length:50px_50px] opacity-20"></div>
+      {/* Valorant-style decorative elements */}
+      <AngularDecoration className="top-20 left-10" delay={0.2} />
+      <AngularDecoration className="bottom-40 right-10" delay={0.5} />
+
+      {/* Background grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:40px_40px] opacity-5"></div>
+
+      {/* Scan lines effect */}
+      <Scanlines />
+      <style jsx>{scanlinesStyle}</style>
 
       <div className="container mx-auto px-4 relative z-10">
         <div className="text-center mb-16">
+          <div className="w-10 h-[2px] bg-blue-500 mb-4 mx-auto"></div>
           <p
             ref={subtitleRef}
-            className="font-general text-sm uppercase md:text-[10px] mb-2 text-blue-600 tracking-wider"
+            className="font-general text-sm uppercase tracking-wider md:text-[10px] mb-2 text-blue-500 inline-block py-1 px-2 border-l-2 border-blue-500"
           >
-            What TECHANV Stands For
+            <GlitchText text="WHAT TECHANV STANDS FOR" />
           </p>
 
           <div ref={titleRef}>
             <AnimatedTitle
               title="The Full Form of <b>TECHANV</b>"
-              containerClass="mt-5 !text-black text-center"
+              containerClass="mt-5 !text-white text-center uppercase tracking-wide"
             />
           </div>
 
           <p
             ref={descriptionRef}
-            className="max-w-2xl mx-auto mt-6 text-gray-600"
+            className="max-w-2xl mx-auto mt-6 text-gray-400"
           >
+            <span className="text-blue-500 mr-2">//</span>
             At security.techanv.com, we deliver enterprise-grade security solutions
             through our comprehensive technology ecosystem.
           </p>
@@ -532,8 +711,14 @@ const TechANVDetails = () => {
 
         <div
           ref={ctaSectionRef}
-          className="mt-16 p-6 bg-gradient-to-br from-blue-800 to-blue-900 text-white rounded-lg text-center relative overflow-hidden"
+          className="mt-16 p-6 bg-[#050505] rounded-none md:rounded-lg text-white text-center relative overflow-hidden border border-blue-500/20"
         >
+          {/* Decorative lines */}
+          <div className="absolute top-0 left-0 w-[150px] h-[1px] bg-blue-500/50"></div>
+          <div className="absolute top-0 left-0 w-[1px] h-[150px] bg-blue-500/50"></div>
+          <div className="absolute bottom-0 right-0 w-[150px] h-[1px] bg-blue-500/50"></div>
+          <div className="absolute bottom-0 right-0 w-[1px] h-[150px] bg-blue-500/50"></div>
+
           {/* Security-themed background pattern */}
           <div className="absolute inset-0 opacity-10">
             <div className="absolute inset-0" style={{
@@ -545,16 +730,23 @@ const TechANVDetails = () => {
           {/* Animated light beam effect */}
           <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white to-transparent opacity-20 cta-beam" style={{ transform: "translateX(-100%)" }}></div>
 
-          <h3 className="text-xl font-bold mb-3 relative">
+          <div className="mb-2 flex items-center justify-center">
+            <div className="w-10 h-[2px] bg-blue-500 mr-4"></div>
+            <GlitchText text="CYBERSECURITY SOLUTIONS" className="text-sm font-bold tracking-wider text-blue-500" />
+          </div>
+
+          <h3 className="text-xl font-bold mb-3 relative uppercase tracking-wider">
             Visit security.techanv.com
           </h3>
 
-          <p className="relative">
+          <p className="relative text-gray-300 max-w-2xl mx-auto">
             Explore our complete suite of cybersecurity solutions designed to protect
             your organization against evolving threats in the digital landscape.
           </p>
 
-          <AnimatedCTA />
+          <div className="mt-8">
+            <ValorantButton text="DISCOVER OUR SOLUTIONS" />
+          </div>
         </div>
       </div>
     </section>
