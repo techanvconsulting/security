@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { FaShieldAlt, FaRobot, FaNetworkWired, FaServer, FaCogs } from "react-icons/fa";
+import { FaShieldAlt, FaRobot, FaNetworkWired, FaServer, FaCogs, FaLock, FaBug } from "react-icons/fa";
 import AnimatedTitle from "./AnimatedTitle";
 import { useIntersection } from "react-use";
 
@@ -490,7 +490,7 @@ const ValorantButton = ({ text, className = "" }) => {
   );
 };
 
-const TechANVDetails = () => {
+const TechANVSecurityPlatform = () => {
   const sectionRef = useRef(null);
   const titleRef = useRef(null);
   const subtitleRef = useRef(null);
@@ -575,45 +575,45 @@ const TechANVDetails = () => {
   const acronymData = [
     {
       letter: "T",
-      word: "Technology",
-      description: "Cutting-edge security technologies and solutions that protect your organization's digital assets against sophisticated threats.",
+      word: "Threat",
+      description: "Advanced threat detection capabilities leveraging AI-driven analytics to identify sophisticated attacks across your entire security infrastructure.",
       icon: <FaShieldAlt size={24} />
     },
     {
       letter: "E",
-      word: "Ecosystem for",
-      description: "An integrated ecosystem of security solutions that work together seamlessly to provide comprehensive protection across your entire infrastructure.",
-      icon: <FaCogs size={24} />
+      word: "Extended",
+      description: "Comprehensive protection extending beyond endpoints to cloud workloads, networks, and identity management through our XDR platform architecture.",
+      icon: <FaNetworkWired size={24} />
     },
     {
       letter: "C",
-      word: "Cybersecurity",
-      description: "Enterprise-grade cybersecurity solutions including SIEM, XDR, EDR, and SOAR platforms that detect, analyze, and respond to security threats in real-time.",
-      icon: <FaShieldAlt size={24} />
+      word: "Contextual",
+      description: "Risk-based contextual analysis that prioritizes alerts and correlates data from multiple security tools to provide a unified view of security incidents.",
+      icon: <FaServer size={24} />
     },
     {
       letter: "H",
-      word: "Hyperautomation",
-      description: "Advanced security automation capabilities that streamline incident response, reduce manual interventions, and accelerate threat mitigation.",
-      icon: <FaCogs size={24} />
+      word: "Hardened",
+      description: "Security-hardened architecture built with defensive programming principles to ensure the platform itself remains secure against evolving threats.",
+      icon: <FaLock size={24} />
     },
     {
       letter: "A",
-      word: "Artificial Intelligence",
-      description: "AI-powered security analytics that identify patterns, detect anomalies, and predict potential threats before they impact your organization.",
+      word: "Automated",
+      description: "Intelligent security automation with self-healing capabilities that eliminate manual interventions and accelerate incident response workflows.",
       icon: <FaRobot size={24} />
     },
     {
       letter: "N",
-      word: "Network",
-      description: "Comprehensive network security solutions that protect your critical infrastructure from perimeter to endpoint with advanced threat detection.",
-      icon: <FaNetworkWired size={24} />
+      word: "Neutralization",
+      description: "Advanced threat neutralization with real-time response actions that rapidly contain and remediate security incidents across your environment.",
+      icon: <FaCogs size={24} />
     },
     {
       letter: "V",
-      word: "Virtualization",
-      description: "Security solutions for virtual environments, cloud infrastructure, and containerized applications that ensure consistent protection across all deployments.",
-      icon: <FaServer size={24} />
+      word: "Vulnerability",
+      description: "Offensive security capabilities (OXDR) that continuously test your environment for vulnerabilities in people, processes, and technology.",
+      icon: <FaBug size={24} />
     }
   ];
 
@@ -648,7 +648,7 @@ const TechANVDetails = () => {
   `;
 
   return (
-    <section id="techanv-meaning" ref={sectionRef} className="py-20 bg-[#030303] text-white relative overflow-hidden">
+    <section id="techanv-security-platform" ref={sectionRef} className="py-20 bg-[#030303] text-white relative overflow-hidden">
       {/* Background security animation */}
       <SecurityParticles />
 
@@ -670,12 +670,12 @@ const TechANVDetails = () => {
             ref={subtitleRef}
             className="font-general text-sm uppercase tracking-wider md:text-[10px] mb-2 text-blue-500 inline-block py-1 px-2 border-l-2 border-blue-500"
           >
-            <GlitchText text="WHAT TECHANV STANDS FOR" />
+            <GlitchText text="ADVANCED THREAT PROTECTION" />
           </p>
 
           <div ref={titleRef}>
             <AnimatedTitle
-              title="The Full Form of <b>TECHANV</b>"
+              title="The <b>TECHANV</b> Security Platform"
               containerClass="mt-5 !text-white text-center uppercase tracking-wide"
             />
           </div>
@@ -685,8 +685,8 @@ const TechANVDetails = () => {
             className="max-w-2xl mx-auto mt-6 text-gray-400"
           >
             <span className="text-blue-500 mr-2">//</span>
-            At security.techanv.com, we deliver enterprise-grade security solutions
-            through our comprehensive technology ecosystem.
+            Our unified XDR/OXDR platform delivers enterprise-grade security through
+            attacker-minded defenses and intelligent threat response.
           </p>
 
           {/* Animated divider */}
@@ -732,20 +732,21 @@ const TechANVDetails = () => {
 
           <div className="mb-2 flex items-center justify-center">
             <div className="w-10 h-[2px] bg-blue-500 mr-4"></div>
-            <GlitchText text="CYBERSECURITY SOLUTIONS" className="text-sm font-bold tracking-wider text-blue-500" />
+            <GlitchText text="UNIFIED SECURITY PLATFORM" className="text-sm font-bold tracking-wider text-blue-500" />
           </div>
 
           <h3 className="text-xl font-bold mb-3 relative uppercase tracking-wider">
-            Visit security.techanv.com
+            Deep Dive into TECHANV XDR/OXDR
           </h3>
 
           <p className="relative text-gray-300 max-w-2xl mx-auto">
-            Explore our complete suite of cybersecurity solutions designed to protect
-            your organization against evolving threats in the digital landscape.
+            Our security platform combines defensive XDR capabilities with offensive OXDR
+            techniques to provide comprehensive threat detection, vulnerability testing,
+            and automated incident response.
           </p>
 
           <div className="mt-8">
-            <ValorantButton text="DISCOVER OUR SOLUTIONS" />
+            <ValorantButton text="REQUEST A DEMO" />
           </div>
         </div>
       </div>
@@ -753,4 +754,4 @@ const TechANVDetails = () => {
   );
 };
 
-export default TechANVDetails;
+export default TechANVSecurityPlatform;
