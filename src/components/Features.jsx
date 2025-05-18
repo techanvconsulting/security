@@ -580,7 +580,7 @@ const Features = () => {
         <BentoTilt className="relative mb-7 h-96 w-full overflow-hidden md:h-[65vh]" index={0}>
           <SecurityBadge icon={<FaShieldAlt size={18} />} delay={0.6} className="top-5 right-5" />
           <BentoCard
-            src="videos/feature-1.mp4"
+            src="videos/14209120-hd_1280_720_30fps.mp4"
             title={
               <>
                 S<b>I</b>EM
@@ -595,7 +595,7 @@ const Features = () => {
           <BentoTilt className="row-span-1 md:col-span-1 md:row-span-2" index={1}>
             <SecurityBadge icon={<FaNetworkWired size={18} />} delay={0.8} className="top-5 left-5" />
             <BentoCard
-              src="videos/feature-2.mp4"
+              src="videos/8721926-hd_720_1366_25fps.mp4"
               title={
                 <>
                   X<b>D</b>R
@@ -609,7 +609,7 @@ const Features = () => {
           <BentoTilt className="row-span-1 ms-32 md:col-span-1 md:ms-0" index={2}>
             <SecurityBadge icon={<FaLock size={18} />} delay={1.0} className="bottom-5 right-5" />
             <BentoCard
-              src="videos/feature-3.mp4"
+              src="videos/2792370-hd_1920_1080_30fps.mp4"
               title={
                 <>
                   E<b>D</b>R
@@ -623,7 +623,7 @@ const Features = () => {
           <BentoTilt className="me-14 md:col-span-1 md:me-0" index={3}>
             <SecurityBadge icon={<FaServer size={18} />} delay={1.2} className="bottom-5 left-5" />
             <BentoCard
-              src="videos/feature-4.mp4"
+              src="videos/277093_small.mp4"
               title={
                 <>
                   SO<b>A</b>R
